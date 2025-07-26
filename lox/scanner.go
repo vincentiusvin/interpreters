@@ -87,11 +87,49 @@ func (s *Scanner) scanTokens() []Token {
 			break
 		}
 		s.start = s.current
-		s.scanTokens() // this is it. Recursive descent
+		s.scanToken()
 	}
 
 	s.tokens = append(s.tokens, NewToken(EOF, "", nil, s.line))
 	return s.tokens
+}
+
+func (s *Scanner) scanToken() {
+	c := s.advance()
+
+	switch c {
+	case '(':
+		s.addToken(LEFT_PAREN, nil)
+	case ')':
+		s.addToken(RIGHT_PAREN, nil)
+	case '{':
+		s.addToken(LEFT_BRACE, nil)
+	case '}':
+		s.addToken(RIGHT_BRACE, nil)
+	case ',':
+		s.addToken(COMMA, nil)
+	case '.':
+		s.addToken(DOT, nil)
+	case '-':
+		s.addToken(MINUS, nil)
+	case '+':
+		s.addToken(PLUS, nil)
+	case ';':
+		s.addToken(SEMICOLON, nil)
+	case '*':
+		s.addToken(STAR, nil)
+	}
+}
+
+func (s *Scanner) addToken(tokenType TokenType, literal any) {
+	text := s.source[s.start:s.current]
+	s.tokens = append(s.tokens, NewToken(tokenType, text, literal, s.line))
+}
+
+func (s *Scanner) advance() byte {
+	ch := s.source[s.current]
+	s.current += 1
+	return ch
 }
 
 func (s *Scanner) isAtEnd() bool {
