@@ -55,3 +55,53 @@ func (l *Lox) report(line int, where string, message string) {
 	fmt.Printf("[line %v] Error %v: %v", line, where, message)
 	l.hadError = true
 }
+
+type TokenType string
+
+const (
+	LEFT_PAREN  TokenType = "("
+	RIGHT_PAREN TokenType = ")"
+	LEFT_BRACE  TokenType = "{"
+	RIGHT_BRACE TokenType = "{"
+	COMMA       TokenType = ","
+	DOT         TokenType = "."
+	MINUS       TokenType = "-"
+	PLUS        TokenType = "+"
+	SEMICOLON   TokenType = ";"
+	SLASH       TokenType = "/"
+	STAR        TokenType = "*"
+
+	BANG          TokenType = "!"
+	BANG_EQUAL    TokenType = "!="
+	EQUAL         TokenType = "="
+	EQUAL_EQUAL   TokenType = "=="
+	GREATER       TokenType = ">"
+	GREATER_EQUAL TokenType = ">="
+	LESS          TokenType = "<"
+	LESS_EQUAL    TokenType = "<="
+
+	// dynamic types
+	IDENTIFIER TokenType = "IDENTIFIER"
+	STRING     TokenType = "STRING"
+	NUMBER     TokenType = "NUMBER"
+
+	AND   TokenType = "AND"
+	CLASS TokenType = "CLASS"
+	ELSE  TokenType = "ELSE"
+	FALSE TokenType = "FALSE"
+	FUN   TokenType = "FUN"
+	FOR   TokenType = "FOR"
+	IF    TokenType = "IF"
+	NIL   TokenType = "NIL"
+	OR    TokenType = "OR"
+
+	PRINT  TokenType = "PRINT"
+	RETURN TokenType = "RETURN"
+	SUPER  TokenType = "SUPER"
+	THIS   TokenType = "THIS"
+	TRUE   TokenType = "TRUE"
+	VAR    TokenType = "VAR"
+	WHILE  TokenType = "WHILE"
+
+	EOF TokenType = "EOF"
+)
