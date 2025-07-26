@@ -3,40 +3,55 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 )
 
 func main() {
 	argLen := len(os.Args)
+	lox := Lox{}
 	if argLen == 1 {
-		runPrompt()
+		lox.runPrompt(os.Stdin)
 	} else if argLen == 2 {
-		runFile(os.Args[1])
+		lox.runFile(os.Args[1])
 	} else {
 		panic("Usage is jlox [script]")
 	}
 }
 
-func runFile(fileName string) error {
+type Lox struct {
+	hadError bool
+}
+
+func (l *Lox) runFile(fileName string) error {
 	file, err := os.ReadFile(fileName)
 	if err != nil {
 		return err
 	}
 
-	run(string(file))
+	l.run(string(file))
+	if l.hadError {
+		return fmt.Errorf("code error")
+	}
 	return nil
 }
 
-func runPrompt() error {
-	sc := bufio.NewScanner(os.Stdin)
+func (l *Lox) runPrompt(r io.Reader) error {
+	sc := bufio.NewScanner(r)
 	for sc.Scan() {
 		line := sc.Text()
-		run(line)
+		l.run(line)
+		l.hadError = false
 	}
 
 	return nil
 }
 
-func run(line string) {
+func (l *Lox) run(line string) {
 	fmt.Println(line)
+}
+
+func (l *Lox) report(line int, where string, message string) {
+	fmt.Printf("[line %v] Error %v: %v", line, where, message)
+	l.hadError = true
 }
