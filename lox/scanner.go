@@ -52,15 +52,48 @@ const (
 type Token struct {
 	tokenType TokenType
 	lexeme    string
-	line      int
 	literal   any
+	line      int
 }
 
-func NewToken(tokenType TokenType, lexeme string, line int, literal any) Token {
+func NewToken(tokenType TokenType, lexeme string, literal any, line int) Token {
 	return Token{
 		tokenType: tokenType,
 		lexeme:    lexeme,
-		line:      line,
 		literal:   literal,
+		line:      line,
 	}
+}
+
+type Scanner struct {
+	source string
+	tokens []Token
+
+	start   int // first character in lexeme that is being scanned
+	current int // current character being considered
+	line    int
+}
+
+func NewScanner(source string) *Scanner {
+	return &Scanner{
+		source: source,
+		tokens: nil,
+	}
+}
+
+func (s *Scanner) scanTokens() []Token {
+	for {
+		if s.isAtEnd() {
+			break
+		}
+		s.start = s.current
+		s.scanTokens() // this is it. Recursive descent
+	}
+
+	s.tokens = append(s.tokens, NewToken(EOF, "", nil, s.line))
+	return s.tokens
+}
+
+func (s *Scanner) isAtEnd() bool {
+	return s.current > len(s.source)
 }
